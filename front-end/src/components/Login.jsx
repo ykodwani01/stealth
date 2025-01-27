@@ -1,73 +1,51 @@
-import React from 'react';
-import { useColorScheme } from '@mui/joy/styles';
-import Sheet from '@mui/joy/Sheet';
-import CssBaseline from '@mui/joy/CssBaseline';
-import Typography from '@mui/joy/Typography';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Input from '@mui/joy/Input';
-import Button from '@mui/joy/Button';
-import Link from '@mui/joy/Link';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
-
+import React, { useState } from 'react';
+import { TextField, Button, Box, Typography } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { login } from './../slice/auth';
 
 const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
   
-    
-   
-    return (
-        <main>
-         
-          <CssBaseline />
-          <Sheet
-            sx={{
-              width: 300,
-              mx: 'auto', // margin left & right
-              my: 4, // margin top & bottom
-              py: 3, // padding top & bottom
-              px: 2, // padding left & right
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 2,
-              borderRadius: 'sm',
-              boxShadow: 'md',
-            }}
-            variant="outlined"
-          >
-            <div>
-              <Typography level="h4" component="h1">
-                <b>Welcome!</b>
-              </Typography>
-              <Typography level="body-sm">Sign in to continue.</Typography>
-            </div>
-            <FormControl>
-              <FormLabel>Email</FormLabel>
-              <Input
-                // html input attribute
-                name="email"
-                type="email"
-                placeholder="johndoe@email.com"
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Password</FormLabel>
-              <Input
-                // html input attribute
-                name="password"
-                type="password"
-                placeholder="password"
-              />
-            </FormControl>
-            <Button sx={{ mt: 1 /* margin top */ }}>Log in</Button>
-            <Typography
-              endDecorator={<Link href="/sign-up">Sign up</Link>}
-              sx={{ fontSize: 'sm', alignSelf: 'center' }}
-            >
-              Don&apos;t have an account?
-            </Typography>
-          </Sheet>
-        </main>
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(login({ email, password })).unwrap();
+      
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+  };
+
+  return (
+    <Box sx={{ maxWidth: 400, mx: 'auto', mt: 5 }}>
+      <Typography variant="h4" gutterBottom>
+        Login
+      </Typography>
+      <form onSubmit={handleLogin}>
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+          Login
+        </Button>
+      </form>
+    </Box>
   );
 };
 

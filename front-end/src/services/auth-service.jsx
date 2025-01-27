@@ -32,10 +32,9 @@ const logout = ()=> {
 
 };
 
-const authService = ()=>{
+const authService = {
     register,
     login,
-    logout
-}
-
+    logout,
+  };
 export default authService;

@@ -5,10 +5,10 @@ const authRoutes = require("./routes/authRoutes");
 // const taskRoutes = require("./routes/taskRoutes");
 // const { authenticate } = require('./middlewares/authMiddleware');
 const fs = require("fs");
-
+const cors = require('cors');
 const app = express();
 const port = 80;
-
+app.use(cors());
 //middleware
 app.use(bodyParser.json());
 //connect to db
