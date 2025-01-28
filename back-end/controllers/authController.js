@@ -1,94 +1,51 @@
-const jwt = require("jsonwebtoken");
-const User = require("../models/userModel");
-const OTP = require("../models/otpModel");
-const nodemailer = require("nodemailer");
-const crypto = require("crypto");
+import authService from "../services/authService.js";
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "bhavya.shah@searce.com",
-    pass: "Bhavya@21",
-  },
-});
-
-const sendOtpMail = (email, otp) => {
-  const mailOptions = {
-    from: "bhavya.shah@searce.com",
-    to: email,
-    subject: "OTP verification code",
-    text: `Your OTP code is ${otp}. It is valid for 10 minutes. `,
-  };
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log('Email sent: ' + info.response);
-    }
-  });
-};
-
-exports.register = async (req, res) => {
+// Register user
+export async function register(req, res) {
   try {
-    console.log(req.body);
     const { email, password } = req.body;
     if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Please provide email and password" });
+      return res.status(400).json({ message: "Please provide email and password" });
     }
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "email already exists" });
-    }
-    const newUser = new User({ email, password });
-    await newUser.save();
-    console.log("Done");
+    await authService.registerUser(email, password);
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
-    console.log("error");
-    res
-      .status(500)
-      .json({ message: "Error registering user", error: err.message });
-  }
-};
-
-exports.sentOtp = async(req,res)=>{
-  try{
-    const {email} = req.body;
-    const user = await User.findOne({email});
-    if(!user){
-      return res.status(400).json({message:"User not found"});
-    }
-    const otp = crypto.randomInt(100000,999999).toString();
-    const otpExpires = Date.now() + 10 *60*1000;//10 minutes
-
-
-  }
-  catch(error){
-    
+    res.status(500).json({ message: "Error registering user", error: err.message });
   }
 }
 
-//login
-exports.login = async (req, res) => {
+// Send OTP
+export async function sendOtp(req, res) {
+  try {
+    const { email } = req.body;
+    await authService.generateOtp(email);
+    res.status(200).json({ message: "OTP sent successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Error sending OTP", error: err.message });
+  }
+}
+
+// Verify OTP
+export async function verifyOtp(req, res) {
+  try {
+    const { email, otp } = req.body;
+    const token = await authService.validateOtp(email, otp);
+    res.json({ authToken: token });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
+// Login user
+export async function login(req, res) {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "email and password are required" });
+      return res.status(400).json({ message: "Email and password are required" });
     }
-    const user = await User.findOne({ email });
-    if (!user || !(await user.comparePassword(password))) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
-    const token = jwt.sign({ id: user._id }, "phaserunner03", {
-      expiresIn: "1h",
-    });
+    const token = await authService.loginUser(email, password);
     res.json({ authToken: token });
-    console.log(token);
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    res.status(401).json({ message: err.message });
   }
-};
+}
