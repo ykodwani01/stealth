@@ -1,120 +1,60 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import authService from "../services/auth-service";
+// src/features/auth/authSlice.ts
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import authService from '../services/auth-service'; // import your service file
 
-const user = JSON.parse(localStorage.getItem("user"));
+// Define the initial state of the auth slice
+interface AuthState {
+  user: any;
+  loading: boolean;
+  error: string | null;
+}
 
-const initialState = {
-  isLoggedIn: !!user,
-  user: user || null,
-  token: user?.token || null,
-  otpSent: false, // Add otpSent state
+const initialState: AuthState = {
+  user: null,
+  loading: false,
+  error: null,
 };
 
-export const register = createAsyncThunk(
-  "auth/register",
-  async ({ email, password }, thunkAPI) => {
+// Define async thunk for registration
+export const registerUser = createAsyncThunk(
+  'auth/register',
+  async (data: { email: string; password: string }, { rejectWithValue }) => {
     try {
-      const response = await authService.register(email, password);
-      return response;
+      const response = await authService.register(data);
+      return response; // return the response data
     } catch (error) {
-      const message = error.response?.data?.message || error.message || error.toString();
-      return thunkAPI.rejectWithValue(message);
+      return rejectWithValue((error as Error).message);
     }
   }
 );
 
-export const login = createAsyncThunk(
-  "auth/login",
-  async ({ email, password }, thunkAPI) => {
-    try {
-      const data = await authService.login(email, password);
-      return { user: data };
-    } catch (error) {
-      const message = error.response?.data?.message || error.message || error.toString();
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const sendOtp = createAsyncThunk(
-  "auth/sendOtp",
-  async ({ email }, thunkAPI) => {
-    try {
-      const response = await authService.sendOtp(email);
-      return response;
-    } catch (error) {
-      const message = error.response?.data?.message || error.message || error.toString();
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const verifyOtp = createAsyncThunk(
-  "auth/verifyOtp",
-  async ({ email, otp }, thunkAPI) => {
-    try {
-      const data = await authService.verifyOtp(email, otp);
-      return { user: data };
-    } catch (error) {
-      const message = error.response?.data?.message || error.message || error.toString();
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const logout = createAsyncThunk("auth/logout", async () => {
-  await authService.logout();
-  return null;
-});
-
+// Create the slice
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
-    resetOtpSent: (state) => {
-      state.otpSent = false;
-    }
+    resetAuthState: (state) => {
+      state.error = null;
+      state.loading = false;
+      state.user = null;
+    },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(login.fulfilled, (state, action) => {
-        state.isLoggedIn = true;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
       })
-      .addCase(login.rejected, (state) => {
-        state.isLoggedIn = false;
-        state.user = null;
-        state.token = null;
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload; // assuming the response contains the user data
       })
-      .addCase(register.fulfilled, (state) => {
-        state.isLoggedIn = false; // User is not logged in immediately after signup
-      })
-      .addCase(logout.fulfilled, (state) => {
-        state.isLoggedIn = false;
-        state.user = null;
-        state.token = null;
-      })
-      .addCase(sendOtp.fulfilled, (state) => {
-        state.otpSent = true; // Set otpSent to true when OTP is sent
-      })
-      .addCase(sendOtp.rejected, (state) => {
-        state.otpSent = false; // Set otpSent to false if sending OTP fails
-      })
-      .addCase(verifyOtp.fulfilled, (state, action) => {
-        state.isLoggedIn = true;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-      })
-      .addCase(verifyOtp.rejected, (state) => {
-        state.isLoggedIn = false;
-        state.user = null;
-        state.token = null;
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string; // setting error if registration fails
       });
   },
 });
 
-export const { resetOtpSent } = authSlice.actions;
-
-const { reducer } = authSlice;
-export default reducer;
+// Export the actions and reducer
+export const { resetAuthState } = authSlice.actions;
+export default authSlice.reducer;
