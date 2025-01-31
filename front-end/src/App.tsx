@@ -1,10 +1,15 @@
 import { Button } from "@/components/ui/button"
+import AppRoutes from './routes/Routes';
 import './App.css'
+import { Provider } from 'react-redux'
+import store from './store'
 
 function App() {
 
   return (
-    <Button>Click me</Button>
+    <Provider store={store}>
+    <AppRoutes />
+  </Provider>
   )
 }
 
