@@ -2,7 +2,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // import Login from '../component/Login';
 import Register from '../component/Register';
-// import Home from '../component/Home';
+import Home from '../component/home'
 // import PrivateRoute from './PrivateRoute';
 
 const AppRoutes = () => {
@@ -11,14 +11,8 @@ const AppRoutes = () => {
         <Routes>
            {/* <Route path="/login" element={<Login />} /> */}
           <Route path="/register" element={<Register />} />
-          {/* <Route */}
-            {/* path="/" */}
-            {/* element={ */}
-              
-                {/* // <Home /> */}
-              
-            {/* } */}
-          {/* />  */}
+          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
         </Routes>
       </Router>
     );
