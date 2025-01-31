@@ -1,65 +1,58 @@
 import React, { useState } from 'react';
-import { TextField, Button, Box, Typography, Alert } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { register } from './../slice/auth';
 
 const Register = () => {
-  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null); // For error messages
-  const [success, setSuccess] = useState(false); // For success feedback
-
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
   const dispatch = useDispatch();
 
   const handleRegister = async (e) => {
-    console.log(email)
-    console.log(password)
     e.preventDefault();
-    setError(null); // Clear previous errors
-    setSuccess(false); // Reset success state
-
+    setError(null);
+    setSuccess(false);
     try {
-      // Dispatch the register action
-      await dispatch(register({email, password })).unwrap();
-      setSuccess(true); // Set success to true on successful registration
+      await dispatch(register({ email, password })).unwrap();
+      setSuccess(true);
     } catch (err) {
-      setError(err || 'An error occurred during registration.'); // Set error message
+      setError(err || 'An error occurred during registration.');
     }
   };
 
   return (
-    <Box sx={{ maxWidth: 400, mx: 'auto', mt: 5 }}>
-      <Typography variant="h4" gutterBottom>
-        Register
-      </Typography>
-
-      {error && <Alert severity="error">{error}</Alert>} {/* Show error */}
-      {success && <Alert severity="success">Registration successful!</Alert>} {/* Show success */}
-
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded">
+      <h2 className="text-2xl font-bold text-center mb-4">Register</h2>
+      {error && <div className="mb-4 text-red-500">{error}</div>}
+      {success && <div className="mb-4 text-green-500">Registration successful!</div>}
       <form onSubmit={handleRegister}>
-        
-        <TextField
-          fullWidth
-          margin="normal"
-          label="Email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <TextField
-          fullWidth
-          margin="normal"
-          label="Password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+        <div className="mb-4">
+          <label className="block text-gray-700">Email</label>
+          <input
+            type="email"
+            className="w-full px-3 py-2 border rounded"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700">Password</label>
+          <input
+            type="password"
+            className="w-full px-3 py-2 border rounded"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+        >
           Register
-        </Button>
+        </button>
       </form>
-    </Box>
+    </div>
   );
 };
 
