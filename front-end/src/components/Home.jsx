@@ -4,10 +4,7 @@ const Home = () => {
   
 
   return (
-    <form >
-      <h2>Home</h2>
-     
-    </form>
+    <h1 className="text-2xl font-bold underline text-center">Hello world!</h1>
   );
 };
 
