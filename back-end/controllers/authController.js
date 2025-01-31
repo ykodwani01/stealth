@@ -1,4 +1,4 @@
-import authService from "../services/authService.js";
+const authService = require("../services/authService");
 
 // Register user
 export async function register(req, res) {

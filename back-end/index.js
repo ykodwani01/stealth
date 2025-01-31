@@ -7,7 +7,7 @@ const authRoutes = require("./routes/authRoutes");
 const fs = require("fs");
 const cors = require('cors');
 const app = express();
-const port = 80;
+const port = 8000;
 app.use(cors());
 //middleware
 app.use(bodyParser.json());
