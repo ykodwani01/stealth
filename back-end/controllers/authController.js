@@ -1,7 +1,7 @@
 const authService = require("../services/authService");
 
 // Register user
-export async function register(req, res) {
+async function register(req, res) {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -15,7 +15,7 @@ export async function register(req, res) {
 }
 
 // Send OTP
-export async function sendOtp(req, res) {
+async function sendOtp(req, res) {
   try {
     const { email } = req.body;
     await authService.generateOtp(email);
@@ -26,7 +26,7 @@ export async function sendOtp(req, res) {
 }
 
 // Verify OTP
-export async function verifyOtp(req, res) {
+async function verifyOtp(req, res) {
   try {
     const { email, otp } = req.body;
     const token = await authService.validateOtp(email, otp);
@@ -37,7 +37,7 @@ export async function verifyOtp(req, res) {
 }
 
 // Login user
-export async function login(req, res) {
+async function login(req, res) {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -49,3 +49,5 @@ export async function login(req, res) {
     res.status(401).json({ message: err.message });
   }
 }
+
+module.exports = {login,verifyOtp,sendOtp,register};
