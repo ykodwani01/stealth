@@ -17,8 +17,8 @@ interface NavbarProps {
 const links: LinkItem[] = [
   { name: 'Home', to: '/home' },
   { name: 'About', to: '/about' },
-  // { name: 'Games', to: '/games' },
   { name: 'Contact', to: '/contact' },
+  { name: 'Logout', to: '/logout' },
 ];
 
 const Navbar: React.FC<NavbarProps> = ({ brandName }) => {

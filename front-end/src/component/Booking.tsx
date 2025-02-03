@@ -12,8 +12,18 @@ const BookingPage: React.FC = () => {
   const { gameId } = useParams<{ gameId: string }>();
   const [bookSlot, { isLoading, isSuccess, isError }] = useBookSlotMutation();
   const [people, setPeople] = useState(1);
-  const [time, setTime] = useState('');
+  const [slot, setSlot] = useState('');
   const [date, setDate] = useState('');
+
+  const generateSlots = () => {
+    const slots = [];
+    for (let i = 0; i < 24; i++) {
+      const start = `${i.toString().padStart(2, '0')}:00`;
+      const end = `${(i + 1).toString().padStart(2, '0')}:00`;
+      slots.push(`${start} - ${end}`);
+    }
+    return slots;
+  };
 
   const handleBookSlot = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +32,7 @@ const BookingPage: React.FC = () => {
       return;
     }
     try {
-      await bookSlot({ gameId, people, time, date }).unwrap();
+      await bookSlot({ gameId, people, time: slot, date }).unwrap();
       alert('Slot booked successfully!');
     } catch (error) {
       alert('Failed to book slot.');
@@ -31,7 +41,7 @@ const BookingPage: React.FC = () => {
 
   return (
     <>
-      <Navbar brandName="GameHub" links={[]} />
+      <div><Navbar brandName="GameHub" links={[]} /></div>
       <div className="booking-page">
         <h1>Book Slot for Game {gameId}</h1>
         <div className="booking-container">
@@ -53,14 +63,18 @@ const BookingPage: React.FC = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <Label htmlFor="time">Time</Label>
-                  <Input
-                    id="time"
-                    type="time"
-                    value={time}
-                    onChange={(e) => setTime(e.target.value)}
+                  <Label htmlFor="slot">Select Slot</Label>
+                  <select
+                    id="slot"
+                    value={slot}
+                    onChange={(e) => setSlot(e.target.value)}
                     required
-                  />
+                  >
+                    <option value="" disabled>Select a slot</option>
+                    {generateSlots().map((slot, index) => (
+                      <option key={index} value={slot}>{slot}</option>
+                    ))}
+                  </select>
                 </div>
                 <div className="form-group">
                   <Label htmlFor="date">Date</Label>
