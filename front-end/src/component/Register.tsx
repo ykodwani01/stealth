@@ -4,9 +4,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Alert } from '@/components/ui/alert';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '@/slice/auth';
 import { AppDispatch } from "@/store"; 
+import { useNavigate } from 'react-router-dom';
 
 interface FormData {
   email: string;
@@ -17,19 +19,32 @@ const Register: React.FC = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
   const dispatch: AppDispatch = useDispatch<AppDispatch>();
   const [success, setSuccess] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  const onSubmit = (data: FormData) => {
-    console.log('Registration Data:', data);
-    dispatch(registerUser({ email: data.email, password: data.password }));
-    // setSuccess(true);
+  const onSubmit = async (data: FormData) => {
+    try {
+        const resultAction = await dispatch(registerUser(data));
+        if (registerUser.fulfilled.match(resultAction)) {
+          setSuccess(true);
+          setError(null);
+          navigate('/');
+        } else {
+          setError("User already exists");
+        }
+      } catch (err) {
+        setError('Registration failed');
+    }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="max-w-md w-full p-6 shadow-lg">
         <h2 className="text-2xl font-bold text-center mb-4">Register</h2>
+        
+        {error && <Alert className="mb-4 mx-6 w-30 text-red-500">{error}</Alert>}
 
-        {success && <div className="mb-4 text-green-500">Registration successful!</div>}
+
 
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
