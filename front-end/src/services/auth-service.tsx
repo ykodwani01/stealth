@@ -16,6 +16,16 @@ const register = async (data: RegisterData) => {
   }
 };
 
+const login = async (data: RegisterData) => {
+  try {
+    const response = await axios.post(`${API_URL}login`, data);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    throw new Error((error as Error).message || "Login failed");
+  }
+}
+
 export default {
-  register,
+  register,login
 };
