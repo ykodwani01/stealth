@@ -5,8 +5,10 @@
 // };
 
 // export default Home;
+import React from 'react';
+import { Link } from 'react-router-dom';
 import '../assets/home.css'
-import Navbar from '../component/navbar'
+import Navbar from './navbar'
 
 
 interface GameCard {
@@ -45,24 +47,23 @@ interface GameCard {
   
   const HomePage: React.FC = () => {
     return (
-    <>
-        <div><Navbar brandName="GameHub"  /></div>
-      
-      <div className="home-page">
-        <h1>Welcome to the Game Hub</h1>
-        <div className="game-cards-container">
-          {gamesData.map((game) => (
-            <div key={game.id} className="game-card">
-              <img src={game.imageUrl} alt={game.title} className="game-image" />
-              <h2>{game.title}</h2>
-              <p>{game.description}</p>
-              <a href={game.link} className="play-button">
-                Play Now
-              </a>
-            </div>
-          ))}
+      <>
+        <div><Navbar brandName="GameHub" /></div>
+        <div className="home-page">
+          <h1 className="welcome-heading">Welcome to the Game Hub</h1>
+          <div className="game-cards-container padded-container">
+            {gamesData.map((game) => (
+              <div key={game.id} className="game-card">
+                <img src={game.imageUrl} alt={game.title} className="game-image" />
+                <h2>{game.title}</h2>
+                <p>{game.description}</p>
+                <Link to={`/book/${game.id}`} className="play-button">
+                  Play Now
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
       </>
     );
   };

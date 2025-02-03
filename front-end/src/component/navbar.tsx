@@ -17,7 +17,7 @@ interface NavbarProps {
 const links: LinkItem[] = [
   { name: 'Home', to: '/home' },
   { name: 'About', to: '/about' },
-  { name: 'Games', to: '/games' },
+  // { name: 'Games', to: '/games' },
   { name: 'Contact', to: '/contact' },
 ];
 
