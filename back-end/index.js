@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const {connectDB} = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
-// const taskRoutes = require("./routes/taskRoutes");
+const appRoutes = require("./routes/appRoutes.js");
 // const { authenticate } = require('./middlewares/authMiddleware');
 const fs = require("fs");
 const cors = require('cors');
@@ -17,7 +17,7 @@ connectDB();
 //routes 
 
 app.use('/api/auth', authRoutes); //authentication routes
-// app.use('/api/tasks', authenticate, taskRoutes); //task routes
+app.use('/api', appRoutes); //task routes
 
 
 app.listen(port, () =>
