@@ -1,7 +1,20 @@
 .home-page {
-    text-align: center;
-    padding: 20px;
-  }
+  text-align: center;
+  padding: 20px;
+  /* display: flex; */
+  flex-direction: column;
+  align-items: center;
+}
+
+.booking-page {
+  text-align: center;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
   
   .game-cards-container {
     display: grid;
@@ -52,6 +65,7 @@
     background-color: #0056b3;
   }
 
+<<<<<<< HEAD
   .contact-us-container {
     max-width: 500px;
     margin: 0 auto;
@@ -105,3 +119,30 @@ button:disabled {
 .error-message {
     color: red;
 }
+=======
+  .booking-container {
+    padding: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 600px; /* Set a maximum width */
+    margin: 0 20px; /* Add margin from both ends */
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+>>>>>>> 9751f81f38a6bed41ff5844390b287440cb17473
