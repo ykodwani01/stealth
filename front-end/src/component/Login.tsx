@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Alert } from '@/components/ui/alert';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '@/slice/auth';
+import { loginUser, sendOtp } from '@/slice/auth';
 import { AppDispatch } from "@/store"; 
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -26,7 +26,14 @@ const Login: React.FC = () => {
         const resultAction = await dispatch(loginUser(data));
         if (loginUser.fulfilled.match(resultAction)) {
           setError(null);
-          navigate('/');
+          const otp = await dispatch(sendOtp({ email: data.email }));
+          if(sendOtp.fulfilled.match(otp)) {
+            navigate('/otpVerification');
+          }
+          else{
+            setError("Network Error")
+          }
+        //   navigate('/otpVerification');
         } else {
           setError("Invalid Email or Password");
         }

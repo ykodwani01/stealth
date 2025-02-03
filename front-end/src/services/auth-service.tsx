@@ -19,13 +19,29 @@ const register = async (data: RegisterData) => {
 const login = async (data: RegisterData) => {
   try {
     const response = await axios.post(`${API_URL}login`, data);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     throw new Error((error as Error).message || "Login failed");
   }
 }
 
+const sendOTP = async (email: string) => {
+  try {
+    const response = await axios.post(`${API_URL}send-otp`, {email});
+    return response.data;
+  } catch (error) {
+    throw new Error((error as Error).message || "OTP failed");
+  }
+}
+const verifyOTP = async (email: string, otp: string) => {
+  try {
+    const response = await axios.post(`${API_URL}verify-otp`, {email, otp});
+    return response.data;
+  } catch (error) {
+    throw new Error("Incorrect OTP");
+  }
+}
+
 export default {
-  register,login
+  register,login,sendOTP, verifyOTP
 };

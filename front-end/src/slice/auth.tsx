@@ -1,27 +1,28 @@
-// src/features/auth/authSlice.ts
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import authService from '../services/auth-service'; // import your service file
-
-// Define the initial state of the auth slice
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import authService from '@/services/auth-service';
+import { RootState } from '@/store';
 interface AuthState {
   user: any;
-  loading: boolean;
+  email: string | null;
+  authToken: string | null;
   error: string | null;
+  loading: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
-  loading: false,
+  email: null,
+  authToken: null,
   error: null,
+  loading: false,
 };
 
-// Define async thunk for registration
 export const registerUser = createAsyncThunk(
   'auth/register',
   async (data: { email: string; password: string }, { rejectWithValue }) => {
     try {
       const response = await authService.register(data);
-      return response; // return the response data
+      return response;
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
@@ -33,14 +34,39 @@ export const loginUser = createAsyncThunk(
   async (data: { email: string; password: string }, { rejectWithValue }) => {
     try {
       const response = await authService.login(data);
-      return response; 
+      return response;
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
   }
 );
 
-// Create the slice
+export const sendOtp = createAsyncThunk(
+  'auth/send-otp',
+  async (data: { email: string }, { rejectWithValue }) => {
+    try {
+      const response = await authService.sendOTP(data.email);
+      return response;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+export const verifyOtp = createAsyncThunk(
+  'auth/verify-otp',
+  async (data: {email:string, otp: string }, { getState, rejectWithValue }) => {
+    
+    
+    try {
+      const response = await authService.verifyOTP(data.email, data.otp);
+      return response;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -49,6 +75,8 @@ const authSlice = createSlice({
       state.error = null;
       state.loading = false;
       state.user = null;
+      state.email = null;
+      state.authToken = null;
     },
   },
   extraReducers: (builder) => {
@@ -58,27 +86,52 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload; // assuming the response contains the user data
+        state.user = action.payload;
+        state.email = action.payload.email;
+        state.authToken = action.payload.authToken;
+        state.error = null;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string; // setting error if registration fails
+        state.error = action.payload as string;
       })
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload; // assuming the response contains the user data
+        state.user = action.payload;
+        state.email = action.meta.arg.email;
+        state.error = null;
       })
-      .addCase(loginUser.rejected,(state,action)=>{
+      .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
-
+      .addCase(sendOtp.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(sendOtp.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(sendOtp.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(verifyOtp.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(verifyOtp.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(verifyOtp.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 
-// Export the actions and reducer
 export const { resetAuthState } = authSlice.actions;
 export default authSlice.reducer;

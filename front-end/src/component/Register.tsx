@@ -8,7 +8,7 @@ import { Alert } from '@/components/ui/alert';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '@/slice/auth';
 import { AppDispatch } from "@/store"; 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 interface FormData {
   email: string;
@@ -86,6 +86,11 @@ const Register: React.FC = () => {
 
             <Button type="submit" className="w-full">Register</Button>
           </form>
+          <div className="text-center mt-4">
+            <p className="text-sm">
+              Already have account? <Link to="/login" className="text-blue-500">Login</Link>
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>
