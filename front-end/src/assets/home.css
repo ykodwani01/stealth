@@ -14,9 +14,17 @@
   align-items: center;
 }
 
+.welcome-heading {
+  font-family: 'Arial', sans-serif; /* Change to your preferred font */
+  font-size: 2.5em; /* Adjust the font size */
+  font-weight: bold; /* Make the font bold */
+  color: #333; /* Change to your preferred color */
+  margin-bottom: 20px; /* Add some space below the heading */
+}
 
   
   .game-cards-container {
+    padding:25px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
@@ -54,7 +62,7 @@
     display: inline-block;
     margin-top: 15px;
     padding: 10px 15px;
-    background-color: #007bff;
+    background-color: #000000;
     color: white;
     text-decoration: none;
     border-radius: 5px;
@@ -62,7 +70,7 @@
   }
   
   .play-button:hover {
-    background-color: #0056b3;
+    background-color: #000000;
   }
 
   .booking-container {
