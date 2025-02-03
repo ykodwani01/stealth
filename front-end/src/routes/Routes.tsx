@@ -5,7 +5,7 @@ import Register from '../component/Register';
 import Home from '../component/home'
 import BookingPage from '../component/Booking';
 // import PrivateRoute from './PrivateRoute';
-
+import ContactUs from '../component/contactus';
 const AppRoutes = () => {
     return (
       <Router>
@@ -15,6 +15,7 @@ const AppRoutes = () => {
           <Route path="/home" element={<Home />} />
           <Route path="/" element={<Home />} />
           <Route path="/book/:gameId" element={<BookingPage />} />
+          <Route path="/contact" element={<ContactUs />} />
         </Routes>
       </Router>
     );
