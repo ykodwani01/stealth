@@ -1,6 +1,6 @@
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// import Login from '../component/Login';
+import Login from '../component/Login';
 import Register from '../component/Register';
 import Home from '../component/home'
 import BookingPage from '../component/Booking';
@@ -10,7 +10,7 @@ const AppRoutes = () => {
     return (
       <Router>
         <Routes>
-           {/* <Route path="/login" element={<Login />} /> */}
+           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
           <Route path="/" element={<Home />} />

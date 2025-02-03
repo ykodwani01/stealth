@@ -6,41 +6,39 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Alert } from '@/components/ui/alert';
 import { useDispatch } from 'react-redux';
-import { registerUser } from '@/slice/auth';
+import { loginUser } from '@/slice/auth';
 import { AppDispatch } from "@/store"; 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 interface FormData {
   email: string;
   password: string;
 }
 
-const Register: React.FC = () => {
+const Login: React.FC = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
   const dispatch: AppDispatch = useDispatch<AppDispatch>();
-  const [success, setSuccess] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const onSubmit = async (data: FormData) => {
     try {
-        const resultAction = await dispatch(registerUser(data));
-        if (registerUser.fulfilled.match(resultAction)) {
-          setSuccess(true);
+        const resultAction = await dispatch(loginUser(data));
+        if (loginUser.fulfilled.match(resultAction)) {
           setError(null);
-          navigate('/login');
+          navigate('/');
         } else {
-          setError("User already exists");
+          setError("Invalid Email or Password");
         }
       } catch (err) {
-        setError('Registration failed');
+        setError('Login failed');
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="max-w-md w-full p-6 shadow-lg">
-        <h2 className="text-2xl font-bold text-center mb-4">Register</h2>
+        <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
         
         {error && <Alert className="mb-4 mx-6 w-30 text-red-500">{error}</Alert>}
 
@@ -84,12 +82,17 @@ const Register: React.FC = () => {
               {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
             </div>
 
-            <Button type="submit" className="w-full">Register</Button>
+            <Button type="submit" className="w-full">Login</Button>
           </form>
+          <div className="text-center mt-4">
+            <p className="text-sm">
+              Don't have an account? <Link to="/register" className="text-blue-500">Register</Link>
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>
   );
 };
 
-export default Register;
+export default Login;

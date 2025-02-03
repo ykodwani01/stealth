@@ -28,6 +28,18 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+export const loginUser = createAsyncThunk(
+  'auth/login',
+  async (data: { email: string; password: string }, { rejectWithValue }) => {
+    try {
+      const response = await authService.login(data);
+      return response; 
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
 // Create the slice
 const authSlice = createSlice({
   name: 'auth',
@@ -51,7 +63,19 @@ const authSlice = createSlice({
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string; // setting error if registration fails
-      });
+      })
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload; // assuming the response contains the user data
+      })
+      .addCase(loginUser.rejected,(state,action)=>{
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
   },
 });
 

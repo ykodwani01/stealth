@@ -1,11 +1,9 @@
 const authHeader = () => {
-    const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+    const userStr = localStorage.getItem("user");
+    const user = userStr ? JSON.parse(userStr) : "";
   
     if (user && user.authToken) {
-      // For Spring Boot back-end
-      // return { Authorization: "Bearer " + user.accessToken };
-  
-      // for Node.js Express back-end
+     
       return { "authToken": user.accessToken };
     } else {
       return {};
