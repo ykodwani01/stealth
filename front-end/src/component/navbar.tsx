@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import '../assets/navbar.css'
 // Define the type for each individual link
 interface LinkItem {
@@ -22,20 +22,33 @@ const links: LinkItem[] = [
 ];
 
 const Navbar: React.FC<NavbarProps> = ({ brandName }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    navigate('/login');
+  };
+
 
   return (
     <nav className="navbar">
-      <div className="navbar-brand">
-        <h1>{brandName}</h1>
-      </div>
-      <div className="navbar-links">
-        {links.map((link, index) => (
+    <div className="navbar-brand">
+      <h1>{brandName}</h1>
+    </div>
+    <div className="navbar-links">
+      {links.map((link, index) => (
+        link.name === 'Logout' ? (
+          <span key={index} onClick={handleLogout} className="navbar-link cursor-pointer">
+            {link.name}
+          </span>
+        ) : (
           <Link key={index} to={link.to} className="navbar-link">
             {link.name}
           </Link>
-        ))}
-      </div>
-    </nav>
+        )
+      ))}
+    </div>
+  </nav>
   );
 };
 
