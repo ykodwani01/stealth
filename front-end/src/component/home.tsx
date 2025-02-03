@@ -48,7 +48,7 @@ interface GameCard {
   const HomePage: React.FC = () => {
     return (
       <>
-        <div><Navbar brandName="GameHub" /></div>
+        <Navbar brandName="GameHub" links={[]} />
         <div className="home-page">
           <h1 className="welcome-heading">Welcome to the Game Hub</h1>
           <div className="game-cards-container padded-container">

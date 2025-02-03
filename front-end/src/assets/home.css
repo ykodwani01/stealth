@@ -74,7 +74,6 @@
     background-color: #000000;
   }
 
-<<<<<<< HEAD
   .contact-us-container {
     max-width: 500px;
     margin: 0 auto;
@@ -128,7 +127,6 @@ button:disabled {
 .error-message {
     color: red;
 }
-=======
   .booking-container {
     padding: 25px;
     display: flex;
@@ -154,4 +152,3 @@ button:disabled {
     padding: 8px;
     box-sizing: border-box;
   }
->>>>>>> 9751f81f38a6bed41ff5844390b287440cb17473

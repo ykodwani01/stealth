@@ -48,7 +48,7 @@ const ContactUs: React.FC = () => {
 
   return (
     <>
-    <Navbar brandName="GameHub" />
+    <Navbar brandName="GameHub" links={[]} />
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="max-w-md w-full p-6 shadow-lg bg-white rounded-lg">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Contact Us</h2>
@@ -105,7 +105,7 @@ const ContactUs: React.FC = () => {
 
             <Button
               type="submit"
-              className="w-full p-3 bg-blue-500 text-white font-semibold rounded-lg disabled:bg-gray-300"
+              className="w-full p-3 bg-gray-900 text-white font-semibold rounded-lg disabled:bg-gray-900"
               disabled={loading}
             >
               {loading ? 'Sending...' : 'Send Message'}
